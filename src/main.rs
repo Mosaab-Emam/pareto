@@ -1,3 +1,4 @@
+mod dot;
 mod laravel;
 mod zip_helper;
 
@@ -6,6 +7,8 @@ enum Backend {
 }
 
 fn main() {
+    dot::init();
+
     let backend = Backend::Laravel;
     let path = ".";
 

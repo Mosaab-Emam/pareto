@@ -2,10 +2,6 @@ use regex::Regex;
 use std::path::Path;
 use std::process::{Command, Stdio};
 
-// use crate::zip_helper;
-
-// mod zip_helper;
-
 fn get_composer_version() -> String {
     let output = Command::new("composer")
         .arg("-v")
@@ -27,7 +23,7 @@ fn create_with_composer() {
         .stdout(Stdio::piped())
         .arg("create-project")
         .arg("laravel/laravel")
-        .arg("example-app")
+        .arg("~/example-app")
         .output()
         .expect("Error creating new laravel project");
 }
@@ -43,16 +39,20 @@ fn prepare_for_zip() {
 pub fn create(path: &str) {
     let _path = Path::new(path);
 
-    get_composer_version(); // Check if composer is installed
+    let composer_version = get_composer_version(); // Check if composer is installed
+    println!("Composer version: {}", composer_version);
+
     create_with_composer();
+    println!("CREATED: ~/.pareto/laravel/example-app");
+
     prepare_for_zip();
 
     match crate::zip_helper::zip_dir::doit(
-        "example-app",
-        "new.zip",
+        "~/.pareto/laravel/example-app",
+        "~/.pareto/archives/example-app",
         zip::CompressionMethod::Deflated,
     ) {
         Ok(_) => println!("done: {} written to {}", "example-app", "new.zip"),
-        Err(e) => println!("Error: {:?}", e),
+        Err(e) => println!("Zip Error: {:?}", e),
     }
 }
