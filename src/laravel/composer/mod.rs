@@ -1,3 +1,4 @@
+use super::packages::Package;
 use std::path::Path;
 use std::process::Command;
 
@@ -7,13 +8,40 @@ pub fn create_laravel(path: &String) {
     }
 
     Command::new("composer")
-        .arg("create-project")
-        .arg("laravel/laravel")
-        .arg(path)
-        .stderr(std::process::Stdio::piped())
-        .stdout(std::process::Stdio::piped())
+        .args(["create-project", "laravel/laravel", path])
         .output()
         .expect("Error creating new laravel project");
 
     println!("CREATED: {}", path);
+}
+
+pub fn require_package(package: &Package, path: &String) {
+    match package {
+        Package::JsonApi => {
+            Command::new("composer")
+                .args(["require", "laravel-json-api/laravel"])
+                .current_dir(path)
+                .output()
+                .expect("Failed to require JSON:API package");
+            Command::new("composer")
+                .args(["require", "--dev", "laravel-json-api/testing"])
+                .current_dir(path)
+                .output()
+                .expect("Failed to require JSON:API testing package");
+            println!("REQUIRE PACKAGE: JSON:API");
+
+            Command::new("php")
+                .args([
+                    "artisan",
+                    "vendor:publish",
+                    format!(r#"--provider="LaravelJsonApi\Laravel\ServiceProvider"#).as_str(), // "--provider=\"LaravelJsonApi\\Laravel\\ServiceProvider\"",
+                ])
+                .current_dir(path)
+                .output()
+                .expect("Failed to publish JSON:API configuration");
+
+            println!("PUBLISH CONFIG: JSON:API")
+        }
+        Package::AdminLTE => {}
+    }
 }

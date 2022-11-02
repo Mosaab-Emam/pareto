@@ -14,7 +14,9 @@ fn main() {
     // Determine which backend initializer to use
     match backend {
         Backend::Laravel => {
-            laravel::Project::new("example-app".to_string()).build();
+            laravel::Project::new("example-app".to_string())
+                .package(laravel::packages::Package::JsonApi)
+                .build();
         }
         _ => panic!("This backend is not supported!"),
     }

@@ -1,13 +1,17 @@
 use crate::dot::dotdir;
 
+use packages::Package;
 use regex::Regex;
+use std::env;
 use std::path::Path;
 use std::process::Command;
 
 pub mod composer;
+pub mod packages;
 pub struct Project {
     name: String,
     path: String,
+    packages: Vec<Package>,
 }
 
 impl Project {
@@ -15,11 +19,20 @@ impl Project {
         Project {
             name: name.clone(),
             path: format!("{}/laravel/{}", dotdir(), name),
+            packages: vec![],
         }
+    }
+
+    pub fn package(mut self, package: Package) -> Project {
+        self.packages.push(package);
+        self
     }
 
     pub fn build(self) {
         composer::create_laravel(&self.path);
+        self.packages
+            .iter()
+            .for_each(|package| composer::require_package(package, &self.path));
     }
 }
 
