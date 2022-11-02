@@ -1,23 +1,28 @@
+pub mod helpers;
+
 pub mod vue {
     pub mod packages {
         pub mod vue_query {
-            #[derive(Debug)]
-            enum QueryType {
-                Query,
-                Mutation,
-            }
+            use crate::helpers::RequestMethod;
+            use convert_case::{Case, Casing};
 
-            #[derive(Debug)]
             struct Query {
                 name: String,
                 url: String,
-                query_type: QueryType,
+            }
+
+            #[derive(Debug)]
+            struct Mutation {
+                name: String,
+                url: String,
+                http_method: RequestMethod,
             }
 
             #[derive(Debug)]
             pub struct ComposableFile {
                 filename: String,
                 queries: Vec<Query>,
+                mutations: Vec<Mutation>,
             }
 
             impl ComposableFile {
@@ -25,6 +30,7 @@ pub mod vue {
                     ComposableFile {
                         filename,
                         queries: vec![],
+                        mutations: vec![],
                     }
                 }
 
@@ -34,10 +40,28 @@ pub mod vue {
                         None => name.clone(),
                     };
 
-                    self.queries.push(Query {
+                    self.queries.push(Query { name, url });
+
+                    self
+                }
+
+                pub fn mutation(
+                    mut self,
+                    mut name: String,
+                    url: Option<String>,
+                    http_method: RequestMethod,
+                ) -> ComposableFile {
+                    name = format!("use{}Mutation", name.to_case(Case::Pascal));
+
+                    let url = match url {
+                        Some(url) => url,
+                        None => self.filename.clone(),
+                    };
+
+                    self.mutations.push(Mutation {
                         name,
                         url,
-                        query_type: QueryType::Query,
+                        http_method,
                     });
 
                     self
