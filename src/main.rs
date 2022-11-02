@@ -1,6 +1,5 @@
-mod dot;
-mod laravel;
-mod zip_helper;
+use pareto::dot;
+use pareto::laravel;
 
 enum Backend {
     Laravel,
@@ -14,7 +13,9 @@ fn main() {
 
     // Determine which backend initializer to use
     match backend {
-        Backend::Laravel => laravel::create(&path),
+        Backend::Laravel => {
+            laravel::Project::new("example-app".to_string()).build();
+        }
         _ => panic!("This backend is not supported!"),
     }
 }
