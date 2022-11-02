@@ -60,8 +60,11 @@ pub fn doit(
         return Err(ZipError::FileNotFound);
     }
 
+    println!("here1");
+
     let path = Path::new(dst_file);
-    let file = File::create(&path).unwrap();
+    println!("here2, {:?}", &path);
+    let file = File::create(&path).expect("failed here?");
 
     let walkdir = WalkDir::new(src_dir.to_string());
     let it = walkdir.into_iter();

@@ -1,3 +1,4 @@
+use crate::dot::dotdir;
 use regex::Regex;
 use std::path::Path;
 use std::process::{Command, Stdio};
@@ -23,7 +24,7 @@ fn create_with_composer() {
         .stdout(Stdio::piped())
         .arg("create-project")
         .arg("laravel/laravel")
-        .arg("~/example-app")
+        .arg(format!("{}/laravel/example-app", dotdir()))
         .output()
         .expect("Error creating new laravel project");
 }
@@ -31,7 +32,7 @@ fn create_with_composer() {
 fn prepare_for_zip() {
     Command::new("rm")
         .arg("-rf")
-        .arg("example-app/vendor")
+        .arg(format!("{}/laravel/example-app/vendor", dotdir()))
         .output()
         .expect("Error deleting vendor directory");
 }
@@ -48,8 +49,8 @@ pub fn create(path: &str) {
     prepare_for_zip();
 
     match crate::zip_helper::zip_dir::doit(
-        "~/.pareto/laravel/example-app",
-        "~/.pareto/archives/example-app",
+        format!("{}/laravel/example-app", dotdir()).as_str(),
+        format!("{}/archives/laravel/example-app", dotdir()).as_str(),
         zip::CompressionMethod::Deflated,
     ) {
         Ok(_) => println!("done: {} written to {}", "example-app", "new.zip"),
