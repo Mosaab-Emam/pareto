@@ -4,6 +4,7 @@ use regex::Regex;
 use std::path::Path;
 use std::process::Command;
 
+pub mod composer;
 pub struct Project {
     name: String,
     path: String,
@@ -18,19 +19,7 @@ impl Project {
     }
 
     pub fn build(self) {
-        if Path::new(&self.path).is_dir() {
-            panic!("Already exists brother");
-        }
-
-        let output = Command::new("composer")
-            .arg("create-project")
-            .arg("laravel/laravel")
-            .arg(&self.path)
-            .output()
-            .expect("Error creating new laravel project");
-
-        println!("{}", String::from_utf8(output.stderr).unwrap());
-        println!("CREATED: {}", &self.path);
+        composer::create_laravel(&self.path);
     }
 }
 
@@ -50,16 +39,6 @@ fn get_composer_version() -> String {
     return String::from(&result[0]);
 }
 
-// fn create_with_composer() {
-//     Command::new("composer")
-//         .stdout(Stdio::piped())
-//         .arg("create-project")
-//         .arg("laravel/laravel")
-//         .arg(format!("{}/laravel/example-app", dotdir()))
-//         .output()
-//         .expect("Error creating new laravel project");
-// }
-
 fn prepare_for_zip() {
     Command::new("rm")
         .arg("-rf")
@@ -73,9 +52,6 @@ pub fn create(path: &str) {
 
     let composer_version = get_composer_version(); // Check if composer is installed
     println!("Composer version: {}", composer_version);
-
-    // create_with_composer();
-    // println!("CREATED: ~/.pareto/laravel/example-app");
 
     prepare_for_zip();
 
