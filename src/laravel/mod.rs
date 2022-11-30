@@ -2,7 +2,6 @@ use crate::dot::dotdir;
 
 use packages::Package;
 use regex::Regex;
-use std::env;
 use std::path::Path;
 use std::process::Command;
 
