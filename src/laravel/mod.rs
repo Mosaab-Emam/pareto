@@ -1,4 +1,7 @@
+use crate::backend::{Backend, BackendFeature};
 use crate::dot::dotdir;
+use crate::helpers::Project;
+use crate::Resource;
 
 use packages::Package;
 use regex::Regex;
@@ -7,22 +10,59 @@ use std::process::Command;
 
 pub mod composer;
 pub mod packages;
-pub struct Project {
+
+#[derive(Debug)]
+pub struct Laravel {
+    name: String,
+    features: Vec<BackendFeature>,
+    resources: Vec<Resource>,
+}
+
+impl Project for Laravel {
+    fn get_path(self: &Self) -> String {
+        format!("{}/laravel/{}", dotdir(), self.name)
+    }
+
+    fn generate(&self) {
+        println!(
+            "Generating Laravel project generated in: {}",
+            self.get_path()
+        );
+    }
+}
+
+impl From<Backend> for Laravel {
+    fn from(backend: Backend) -> Self {
+        Self {
+            name: backend.name,
+            features: backend.features,
+            resources: backend.resources,
+        }
+    }
+}
+
+// ---------------------
+
+#[derive(Debug)]
+pub struct LaravelProject {
     name: String,
     path: String,
     packages: Vec<Package>,
 }
 
-impl Project {
-    pub fn new(name: String) -> Project {
-        Project {
+impl LaravelProject {
+    pub fn new(name: String) -> LaravelProject {
+        let p = LaravelProject {
             name: name.clone(),
             path: format!("{}/laravel/{}", dotdir(), name),
             packages: vec![],
-        }
+        };
+        println!("project created {:?}", p);
+        panic!("enough");
+        p
     }
 
-    pub fn package(mut self, package: Package) -> Project {
+    pub fn package(mut self, package: Package) -> LaravelProject {
         self.packages.push(package);
         self
     }

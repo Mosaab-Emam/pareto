@@ -1,3 +1,4 @@
+pub mod backend;
 pub mod dot;
 pub mod helpers;
 pub mod laravel;
@@ -7,8 +8,8 @@ pub mod zip_helper;
 use helpers::Names;
 
 #[derive(Debug)]
-struct Resource {
-    names: Names,
+pub struct Resource {
+    pub names: Names,
 }
 
 impl Resource {

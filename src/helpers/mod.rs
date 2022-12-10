@@ -1,6 +1,11 @@
 use convert_case::{Case, Casing};
 use pluralize_rs::to_plural;
 
+pub trait Project {
+    fn get_path(&self) -> String;
+    fn generate(&self) {}
+}
+
 #[derive(Debug)]
 pub struct Names {
     pub singular_pascal: String,
