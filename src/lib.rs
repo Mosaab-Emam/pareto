@@ -6,13 +6,28 @@ pub mod package_managers;
 pub mod vue;
 pub mod zip_helper;
 
+pub struct Schema {
+    pub backend: BackendSchema,
+}
+
+pub struct BackendSchema {
+    pub models: Vec<Model>,
+}
+
+impl From<String> for BackendSchema {
+    fn from(s: String) -> Self {
+        println!("here is your schema: {}", s);
+        Self { models: vec![] }
+    }
+}
+
 #[derive(Debug)]
-pub struct Resource {
+pub struct Model {
     pub name: String,
 }
 
-impl Resource {
-    fn new(name: String) -> Resource {
-        Resource { name }
+impl Model {
+    fn new(name: String) -> Model {
+        Model { name }
     }
 }

@@ -2,7 +2,7 @@ use crate::backend::{Backend, BackendFeature};
 use crate::dot::dotdir;
 use crate::helpers::Project;
 use crate::package_managers::composer;
-use crate::Resource;
+use crate::Model;
 
 use crate::backend::packages::LaravelPackage;
 use regex::Regex;
@@ -15,7 +15,7 @@ use std::process::Command;
 pub struct Laravel {
     name: String,
     features: Vec<BackendFeature>,
-    resources: Vec<Resource>,
+    resources: Vec<Model>,
 }
 
 impl Project for Laravel {

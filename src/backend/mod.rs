@@ -1,4 +1,4 @@
-use crate::Resource;
+use crate::Model;
 
 pub mod packages;
 
@@ -14,7 +14,7 @@ pub enum BackendFeature {
 pub struct Backend {
     pub name: String,
     pub features: Vec<BackendFeature>,
-    pub resources: Vec<Resource>,
+    pub resources: Vec<Model>,
 }
 
 impl Backend {
@@ -22,7 +22,7 @@ impl Backend {
         let mut resources = vec![];
         for feature in &features {
             match feature {
-                BackendFeature::Authentication => resources.push(Resource::new("user".into())),
+                BackendFeature::Authentication => resources.push(Model::new("user".into())),
                 BackendFeature::AdminPanel => {}
                 BackendFeature::Database => {}
                 BackendFeature::JsonApi => {}

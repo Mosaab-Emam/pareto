@@ -1,55 +1,33 @@
+use std::fs;
+
 use pareto::backend::{Backend, BackendFeature};
 use pareto::dot;
 use pareto::helpers::Project;
 use pareto::laravel::Laravel;
-// use std::fs::{self, copy};
-
-enum Facing {
-    Frontend,
-    Backend,
-}
-
-// enum Backend {
-//     Laravel,
-// }
-
-// #[derive(Debug)]
-// pub struct Project {
-//     names: Names,
-// }
-
-// impl Project {
-//     pub fn generate() {}
-// }
-
-// pub trait ProjectFactory {
-//     fn new(name: &String) -> Project;
-// }
-
-// pub struct BackendFactory;
-
-// impl BackendFactory {
-//     fn new(name: &String, features: Vec<BackendFeature>) -> Backend {
-//         Backend {
-//             names: Names::new(name),
-//             features,
-//         }
-//     }
-// }
+use pareto::Schema;
 
 fn main() {
     dot::init();
 
-    let name = String::from("ecommerce");
-    let backend = Backend::new(
-        name,
-        vec![BackendFeature::Authentication, BackendFeature::AdminPanel],
-    );
+    let contents = fs::read_to_string("./schemas/blog1.pareto")
+        .expect("Should have been able to read the file");
 
-    let laravel_project: Laravel = backend.into();
+    println!("{}", contents);
 
-    println!("my laravel project: {:?}", laravel_project);
-    laravel_project.generate();
+    // ---------------------- //
+
+    // let name = String::from("ecommerce");
+    // let backend = Backend::new(
+    //     name,
+    //     vec![BackendFeature::Authentication, BackendFeature::AdminPanel],
+    // );
+
+    // let laravel_project: Laravel = backend.into();
+
+    // println!("my laravel project: {:?}", laravel_project);
+    // laravel_project.generate();
+
+    // ---------------------- //
 
     // let backend = Backend::Laravel;
     // let path = ".";
