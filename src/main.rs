@@ -1,7 +1,7 @@
 use pareto::backend::{Backend, BackendFeature};
 use pareto::dot;
-use pareto::helpers::{Names, Project};
-use pareto::laravel::{self, Laravel};
+use pareto::helpers::Project;
+use pareto::laravel::Laravel;
 // use std::fs::{self, copy};
 
 enum Facing {

@@ -1,15 +1,15 @@
 use crate::backend::{Backend, BackendFeature};
 use crate::dot::dotdir;
 use crate::helpers::Project;
+use crate::package_managers::composer;
 use crate::Resource;
 
-use packages::Package;
+use crate::backend::packages::LaravelPackage;
 use regex::Regex;
 use std::path::Path;
 use std::process::Command;
 
-pub mod composer;
-pub mod packages;
+// pub mod packages;
 
 #[derive(Debug)]
 pub struct Laravel {
@@ -47,7 +47,7 @@ impl From<Backend> for Laravel {
 pub struct LaravelProject {
     name: String,
     path: String,
-    packages: Vec<Package>,
+    packages: Vec<LaravelPackage>,
 }
 
 impl LaravelProject {
@@ -62,7 +62,7 @@ impl LaravelProject {
         p
     }
 
-    pub fn package(mut self, package: Package) -> LaravelProject {
+    pub fn package(mut self, package: LaravelPackage) -> LaravelProject {
         self.packages.push(package);
         self
     }

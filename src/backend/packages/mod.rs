@@ -1,5 +1,5 @@
 #[derive(Debug)]
-pub enum Package {
+pub enum LaravelPackage {
     JsonApi,
     AdminLTE,
 }

@@ -2,20 +2,17 @@ pub mod backend;
 pub mod dot;
 pub mod helpers;
 pub mod laravel;
+pub mod package_managers;
 pub mod vue;
 pub mod zip_helper;
 
-use helpers::Names;
-
 #[derive(Debug)]
 pub struct Resource {
-    pub names: Names,
+    pub name: String,
 }
 
 impl Resource {
     fn new(name: String) -> Resource {
-        Resource {
-            names: Names::new(&name),
-        }
+        Resource { name }
     }
 }

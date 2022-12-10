@@ -1,6 +1,7 @@
-use super::packages::Package;
 use std::path::Path;
 use std::process::Command;
+
+use crate::backend::packages::LaravelPackage;
 
 pub fn create_laravel(path: &String) {
     if Path::new(path).is_dir() {
@@ -15,9 +16,9 @@ pub fn create_laravel(path: &String) {
     println!("CREATED: {}", path);
 }
 
-pub fn require_package(package: &Package, path: &String) {
+pub fn require_package(package: &LaravelPackage, path: &String) {
     match package {
-        Package::JsonApi => {
+        LaravelPackage::JsonApi => {
             Command::new("composer")
                 .args(["require", "laravel-json-api/laravel"])
                 .current_dir(path)
@@ -42,6 +43,6 @@ pub fn require_package(package: &Package, path: &String) {
 
             println!("PUBLISH CONFIG: JSON:API")
         }
-        Package::AdminLTE => {}
+        LaravelPackage::AdminLTE => {}
     }
 }

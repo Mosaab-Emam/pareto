@@ -1,5 +1,7 @@
 use crate::Resource;
 
+pub mod packages;
+
 #[derive(Debug)]
 pub enum BackendFeature {
     Authentication,

@@ -18,6 +18,12 @@ pub struct Names {
     pub plural_snake: String,
 }
 
+impl From<String> for Names {
+    fn from(name: String) -> Self {
+        Self::new(&name)
+    }
+}
+
 impl Names {
     pub fn new(singular: &String) -> Names {
         let plural = to_plural(singular);
