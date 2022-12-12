@@ -12,3 +12,4 @@ walkdir = "2.3.2"
 home = "0.5.4"
 convert_case = "0.6.0"
 pluralize-rs = "0.1.0"
+dmmf = { git = "https://github.com/Mosaab-Emam/pareto-engines/" }
