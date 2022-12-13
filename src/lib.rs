@@ -1,8 +1,12 @@
 pub mod backend;
 pub mod dot;
+pub mod enums;
+pub mod factories;
 pub mod helpers;
 pub mod laravel;
+pub mod nestjs;
 pub mod package_managers;
+pub mod traits;
 pub mod vue;
 pub mod zip_helper;
 

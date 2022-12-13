@@ -9,6 +9,8 @@ use regex::Regex;
 use std::path::Path;
 use std::process::Command;
 
+pub mod structs;
+
 // pub mod packages;
 
 #[derive(Debug)]
