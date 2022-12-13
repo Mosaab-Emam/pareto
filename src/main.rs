@@ -3,7 +3,7 @@ use std::path::PathBuf;
 
 use pareto::backend::{Backend, BackendFeature};
 use pareto::dot;
-use pareto::helpers::Project;
+use pareto::helpers::{Names, Project};
 use pareto::laravel::Laravel;
 use pareto::Schema;
 
@@ -71,12 +71,84 @@ fn generate(dmmf: DataModelMetaFormat) -> () {
     // generate_migration();
 }
 
+enum BackendFramework {
+    Laravel,
+    Nestjs,
+}
+
+struct ControllerFactory {}
+
+impl ControllerFactory {
+    pub fn new(framework: BackendFramework, dmmf: DataModelMetaFormat) -> Box<dyn Controller> {
+        match framework {
+            BackendFramework::Laravel => Box::new(LaravelController::from(dmmf)),
+            BackendFramework::Nestjs => Box::new(NestjsController::from(dmmf)),
+        }
+    }
+}
+
+trait Controller {
+    fn contents(&self) -> &String;
+}
+
+#[derive(Debug)]
+struct LaravelController {
+    contents: String,
+}
+
+impl Controller for LaravelController {
+    fn contents(&self) -> &String {
+        &self.contents
+    }
+}
+
+impl From<DataModelMetaFormat> for LaravelController {
+    fn from(dmmf: DataModelMetaFormat) -> Self {
+        let name: &String = &dmmf.data_model.models[0].name;
+        let names: Names = name.into();
+        let stub = fs::read_to_string("./stubs/laravel/controller")
+            .expect("Failed to read controller file");
+        let contents = names.replacer(&stub);
+        Self { contents }
+    }
+}
+
+#[derive(Debug)]
+struct NestjsController {
+    contents: String,
+}
+
+impl Controller for NestjsController {
+    fn contents(&self) -> &String {
+        &self.contents
+    }
+}
+
+impl From<DataModelMetaFormat> for NestjsController {
+    fn from(dmmf: DataModelMetaFormat) -> Self {
+        let name: &String = &dmmf.data_model.models[0].name;
+        let names: Names = name.into();
+        let stub = fs::read_to_string("./stubs/nestjs/controller")
+            .expect("Failed to read controller file");
+        let contents = names.replacer(&stub);
+        Self { contents }
+    }
+}
+
 fn main() {
     dot::init();
 
     let schema = fs::read_to_string("./schemas/schema.pareto").expect("Failed to read schema file");
     let dmmf = dmmf::dmmf_from_schema(&schema);
-    generate(dmmf);
+
+    let controller = ControllerFactory::new(BackendFramework::Nestjs, dmmf);
+
+    println!(
+        "listen up, this is my controller: {}",
+        controller.contents()
+    );
+
+    // generate(dmmf);
     // let laravel_model: LaravelModel = dmmf.into();
 
     // println!("Hello world: {:?}", laravel_model.get_stub_path());

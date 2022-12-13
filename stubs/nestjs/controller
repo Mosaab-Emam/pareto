@@ -1,0 +1,9 @@
+import { Controller, Get } from '@nestjs/common';
+
+@Controller('<<plural_kebab>>')
+export class <<plural_pascal>>Controller {
+  @Get(':id')
+  findOne(@Param() params): string {
+    return `This action returns a #${params.id} <<singular_pascal>>`;
+  }
+}

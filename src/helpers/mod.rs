@@ -18,8 +18,8 @@ pub struct Names {
     pub plural_snake: String,
 }
 
-impl From<String> for Names {
-    fn from(name: String) -> Self {
+impl From<&String> for Names {
+    fn from(name: &String) -> Self {
         Self::new(&name)
     }
 }
@@ -41,14 +41,14 @@ impl Names {
 
     pub fn replacer(&self, contents: &String) -> String {
         contents
-            .replace("$$singular_pascal$$", &self.singular_pascal)
-            .replace("$$singular_camel$$", &self.singular_camel)
-            .replace("$$singular_kebab$$", &self.singular_kebab)
-            .replace("$$singular_snake$$", &self.singular_snake)
-            .replace("$$plural_pascal$$", &self.plural_pascal)
-            .replace("$$plural_camel$$", &self.plural_camel)
-            .replace("$$plural_kebab$$", &self.plural_kebab)
-            .replace("$$plural_snake$$", &self.plural_snake)
+            .replace("<<singular_pascal>>", &self.singular_pascal)
+            .replace("<<singular_camel>>", &self.singular_camel)
+            .replace("<<singular_kebab>>", &self.singular_kebab)
+            .replace("<<singular_snake>>", &self.singular_snake)
+            .replace("<<plural_pascal>>", &self.plural_pascal)
+            .replace("<<plural_camel>>", &self.plural_camel)
+            .replace("<<plural_kebab>>", &self.plural_kebab)
+            .replace("<<plural_snake>>", &self.plural_snake)
     }
 }
 

@@ -1,0 +1,20 @@
+<?php
+ 
+namespace App\Http\Controllers;
+ 
+use App\Models\<<singular_pascal>>;
+ 
+class <<singular_pascal>>Controller extends Controller
+{
+    /**
+     * Find and return a given <<singular_pascal>>.
+     *
+     * @param  int  $id
+     * @return \Illuminate\View\View
+     */
+    public function findOne($id)
+    {
+        $<<singular_snake>> = <<singular_pascal>>::findOrFail($id);
+        return $<<singular_snake>>;
+    }
+}
