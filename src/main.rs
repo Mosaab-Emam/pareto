@@ -81,8 +81,8 @@ struct ControllerFactory {}
 impl ControllerFactory {
     pub fn new(framework: BackendFramework, dmmf: DataModelMetaFormat) -> Box<dyn Controller> {
         match framework {
-            BackendFramework::Laravel => Box::new(LaravelController::from(dmmf)),
-            BackendFramework::Nestjs => Box::new(NestjsController::from(dmmf)),
+            BackendFramework::Laravel => Box::new(LaravelController::new(framework, dmmf)),
+            BackendFramework::Nestjs => Box::new(NestjsController::new(framework, dmmf)),
         }
     }
 }
@@ -102,8 +102,8 @@ impl Controller for LaravelController {
     }
 }
 
-impl From<DataModelMetaFormat> for LaravelController {
-    fn from(dmmf: DataModelMetaFormat) -> Self {
+impl LaravelController {
+    fn new(framework: BackendFramework, dmmf: DataModelMetaFormat) -> Self {
         let name: &String = &dmmf.data_model.models[0].name;
         let names: Names = name.into();
         let stub = fs::read_to_string("./stubs/laravel/controller")
@@ -124,8 +124,8 @@ impl Controller for NestjsController {
     }
 }
 
-impl From<DataModelMetaFormat> for NestjsController {
-    fn from(dmmf: DataModelMetaFormat) -> Self {
+impl NestjsController {
+    fn new(framework: BackendFramework, dmmf: DataModelMetaFormat) -> Self {
         let name: &String = &dmmf.data_model.models[0].name;
         let names: Names = name.into();
         let stub = fs::read_to_string("./stubs/nestjs/controller")
@@ -135,18 +135,73 @@ impl From<DataModelMetaFormat> for NestjsController {
     }
 }
 
+struct BackendProjectFactory {}
+
+impl BackendProjectFactory {
+    pub fn new(framework: BackendFramework, dmmf: DataModelMetaFormat) -> Box<dyn BackendProject> {
+        match framework {
+            BackendFramework::Laravel => Box::new(LaravelProject::new(framework, dmmf)),
+            BackendFramework::Nestjs => Box::new(NestjsProject::new(framework, dmmf)),
+        }
+    }
+}
+
+trait BackendProject {
+    fn resources(&self) -> &Vec<String>;
+    fn summarise(&self) -> String {
+        format!("resources: {:?}", self.resources())
+    }
+}
+
+#[derive(Debug)]
+struct LaravelProject {
+    resources: Vec<String>,
+}
+
+impl BackendProject for LaravelProject {
+    fn resources(&self) -> &Vec<String> {
+        &self.resources
+    }
+}
+
+impl LaravelProject {
+    fn new(framework: BackendFramework, dmmf: DataModelMetaFormat) -> Self {
+        Self { resources: vec![] }
+    }
+}
+
+#[derive(Debug)]
+struct NestjsProject {
+    resources: Vec<String>,
+}
+
+impl BackendProject for NestjsProject {
+    fn resources(&self) -> &Vec<String> {
+        &self.resources
+    }
+}
+
+impl NestjsProject {
+    fn new(framework: BackendFramework, dmmf: DataModelMetaFormat) -> Self {
+        Self { resources: vec![] }
+    }
+}
+
 fn main() {
     dot::init();
 
     let schema = fs::read_to_string("./schemas/schema.pareto").expect("Failed to read schema file");
     let dmmf = dmmf::dmmf_from_schema(&schema);
 
-    let controller = ControllerFactory::new(BackendFramework::Nestjs, dmmf);
+    // let controller = ControllerFactory::new(BackendFramework::Nestjs, dmmf);
 
-    println!(
-        "listen up, this is my controller: {}",
-        controller.contents()
-    );
+    // println!(
+    //     "listen up, this is my controller: {}",
+    //     controller.contents()
+    // );
+
+    let backend = BackendProjectFactory::new(BackendFramework::Nestjs, dmmf);
+    println!("{:?}", backend.summarise());
 
     // generate(dmmf);
     // let laravel_model: LaravelModel = dmmf.into();
